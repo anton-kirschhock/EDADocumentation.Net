@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDADocumentation.Net", "EDADocumentation.Net.csproj", "{73EA4D84-F2BC-448D-A80A-885DEAABECA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "..\TestProject\TestProject.csproj", "{672349AC-EADC-4F04-914C-16C9F099F417}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73EA4D84-F2BC-448D-A80A-885DEAABECA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73EA4D84-F2BC-448D-A80A-885DEAABECA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73EA4D84-F2BC-448D-A80A-885DEAABECA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73EA4D84-F2BC-448D-A80A-885DEAABECA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{672349AC-EADC-4F04-914C-16C9F099F417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{672349AC-EADC-4F04-914C-16C9F099F417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{672349AC-EADC-4F04-914C-16C9F099F417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672349AC-EADC-4F04-914C-16C9F099F417}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F854B8BF-220F-4898-9CB1-480D6305A4A2}
+	EndGlobalSection
+EndGlobal
