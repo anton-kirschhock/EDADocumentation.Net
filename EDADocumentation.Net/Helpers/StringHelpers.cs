@@ -10,7 +10,7 @@ namespace EDADocumentation.Net.Helpers
         /// <param name="s">string to trim</param>
         /// <returns>fully trimmed string</returns>
         public static string? FullTrim(this string? s)
-            => s?.Trim()?.Trim('\n')?.Trim('\t');
+            => string.Join('\n', s?.Trim()?.Trim('\n')?.Trim('\t').Split('\n').Select(e => e.Trim()));
 
         public static string? ParseEvent(this XElement element)
         {

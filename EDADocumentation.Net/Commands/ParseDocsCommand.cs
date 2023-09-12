@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 using EDADocumentation.Net.Helpers;
@@ -49,9 +48,9 @@ namespace EDADocumentation.Net.Commands
     }
 
     public record SelectedFilesPromptItem(string Name, string FullName);
-    public class ParseDocsCommand : Command<ParseDocsCommandSettings>
+    public class ParseDocsCommand : AsyncCommand<ParseDocsCommandSettings>
     {
-        public override int Execute([NotNull] CommandContext context, [NotNull] ParseDocsCommandSettings settings)
+        public override async Task<int> ExecuteAsync(CommandContext context, ParseDocsCommandSettings settings)
         {
             AnsiConsole.WriteLine("Generate Markdown documentation for your .Net Class Library XML documentation for your EDA!");
             var outDir = new DirectoryInfo(settings.OutDirectory);
@@ -64,9 +63,9 @@ namespace EDADocumentation.Net.Commands
                     return 0;
                 }
             }
-
+            var searchpattern = AnsiConsole.Prompt<string>(new TextPrompt<string>("Specify an optional search pattern to finetune your search:").DefaultValue("*.xml"));
             // Select all files
-            var files = new DirectoryInfo(settings.RootDirectory).EnumerateFiles("*.xml", SearchOption.AllDirectories);
+            var files = new DirectoryInfo(settings.RootDirectory).EnumerateFiles(searchpattern, SearchOption.AllDirectories);
             var selectedFilesPrompt =
                     new MultiSelectionPrompt<SelectedFilesPromptItem>()
                         .Title("Select all [green]xml files[/] which should be included?")
@@ -85,7 +84,7 @@ namespace EDADocumentation.Net.Commands
             });
 
             var selectedFiles = AnsiConsole.Prompt(selectedFilesPrompt);
-            AnsiConsole.Status().StartAsync($"Starting the processing of {selectedFiles.Count} xml files...", async (ctx) =>
+            await AnsiConsole.Status().StartAsync($"Starting the processing of {selectedFiles.Count} xml files...", async (ctx) =>
             {
                 var processes = new HashSet<Process>();
                 var services = new HashSet<Service>();
@@ -105,7 +104,7 @@ namespace EDADocumentation.Net.Commands
                         var typeName = item.Attribute("name")!.Value.Substring(2);
                         if (typeName.EndsWith("Event") || item.Element("isEvent") != null)
                         {
-                            ctx.Status($"Parsing {file.FullName} - Processing type {typeName}...");
+                            AnsiConsole.MarkupLine($"Parsing {file.FullName} - Processing type {typeName}...");
                             var evProcesses = item.Elements("process")
                                                 .Where(e => e != null && !string.IsNullOrWhiteSpace(e.Value))
                                                 .Select(e => (Name: e.Value.FullTrim(), Order: e.Attribute("eventOrder")?.Value ?? null))
@@ -198,9 +197,7 @@ namespace EDADocumentation.Net.Commands
                             }
                         }
 
-
                     }
-                    ctx.Status($"Parsing {file.FullName}");
 
                 }
 
@@ -212,7 +209,7 @@ namespace EDADocumentation.Net.Commands
                 }
                 foreach (var e in events)
                 {
-                    ctx.Status($"Writing {events.Count} events - {e.Name}");
+                    AnsiConsole.MarkupLine($"Writing {events.Count} events - {e.Name}");
 
                     var path = Path.Combine(eventRoot, $"{e.Key}.md");
                     if (Path.Exists(path))
@@ -229,7 +226,7 @@ namespace EDADocumentation.Net.Commands
                 }
                 foreach (var e in services)
                 {
-                    ctx.Status($"Writing {services.Count} services - {e.Name}");
+                    AnsiConsole.MarkupLine($"Writing {services.Count} services - {e.Name}");
 
                     var path = Path.Combine(svcRoot, $"{e.Name}.md");
                     if (Path.Exists(path))
@@ -246,7 +243,7 @@ namespace EDADocumentation.Net.Commands
                 }
                 foreach (var e in processes)
                 {
-                    ctx.Status($"Writing {services.Count} processes - {e.Name}");
+                    AnsiConsole.MarkupLine($"Writing {services.Count} processes - {e.Name}");
 
                     var path = Path.Combine(procRoot, $"{e.Name}.md");
                     if (Path.Exists(path))
@@ -255,12 +252,13 @@ namespace EDADocumentation.Net.Commands
                     await e.WriteTo(File.Create(path));
                 }
 
-                ctx.Status("Cleaning up...");
-
+                ctx.Status("All done!");
+                ctx.SpinnerStyle(Style.Parse("green"));
                 return Task.CompletedTask;
             });
 
             return 0;
         }
+
     }
 }
