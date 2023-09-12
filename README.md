@@ -72,9 +72,9 @@ Want to contribute or got great Ideas? Why not create a PR or start an discussio
 - [x] Generate Services MD files
 - [x] Generate Process MD files
 - [x] Generate Event MD files
-- [] Hyperlink support between files
-- [] JSON output
-- [] mdx and a react based visualizer tool
-- [] Upsert support
-- [] Pipeline support
-- [] refactoring of code
+- [ ] Hyperlink support between files
+- [ ] JSON output
+- [ ] mdx and a react based visualizer tool
+- [ ] Upsert support
+- [ ] Pipeline support
+- [ ] refactoring of code
